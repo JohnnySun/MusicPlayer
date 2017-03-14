@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Region;
 import android.os.Build;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -46,6 +47,8 @@ public class WheelView extends View {
     private static final int duration = 350, frameRate = 1;
     private float maxRadius = 1000;
     private Runnable runnable;
+    // Used to interpolate material ripple effect.
+    private FastOutSlowInInterpolator fosInterpolator;
 
     public WheelView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -72,6 +75,7 @@ public class WheelView extends View {
         buttonWidth = getResources().getDimensionPixelSize(R.dimen.button_width);
         buttonHeight = getResources().getDimensionPixelSize(R.dimen.button_height);
         animating = false;
+        fosInterpolator = new FastOutSlowInInterpolator();
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -111,8 +115,7 @@ public class WheelView extends View {
             } else {
                 //postDelayed(runnable, (long) frameRate);
                 float progress = (System.currentTimeMillis() - timer) / (float) duration;
-                Log.d("WHAT", Float.toString(progress));
-                canvas.drawCircle(ripplePoint.x, ripplePoint.y, progress * maxRadius + buttonWidth, ripplePaint);
+                canvas.drawCircle(ripplePoint.x, ripplePoint.y, fosInterpolator.getInterpolation(progress) * maxRadius + buttonWidth, ripplePaint);
                 canvas.drawCircle(center.x,center.y,radiusIn,paintIn);
 
                 if (Build.VERSION.SDK_INT != 23)
