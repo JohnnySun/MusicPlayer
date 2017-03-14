@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Region;
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -49,6 +50,7 @@ public class WheelView extends View {
     private Runnable runnable;
     // Used to interpolate material ripple effect.
     private FastOutSlowInInterpolator fosInterpolator;
+    private View mView;
 
     public WheelView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -76,6 +78,7 @@ public class WheelView extends View {
         buttonHeight = getResources().getDimensionPixelSize(R.dimen.button_height);
         animating = false;
         fosInterpolator = new FastOutSlowInInterpolator();
+        mView = this;
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -254,4 +257,12 @@ public class WheelView extends View {
         animating = true;
         invalidate();
     }
-}
+
+    @Override
+    public void setElevation(float elevation) {
+        if (mView != null) {
+            ViewCompat.setElevation(mView, elevation);
+        } else {
+            super.setElevation(elevation);
+        }
+    }}
