@@ -7,16 +7,17 @@ import com.heinrichreimersoftware.materialintro.slide.Slide;
 import bob.sun.bender.R;
 
 /**
- * Created by bob.sun on 13/02/2017.
+ * Used for setting up MiBand
+ * Created by JohnnySun on 西暦17/03/30.
  */
 
-public class IntroStepThree implements Slide {
+public class IntroStepFour implements Slide {
     Fragment fragment;
 
     @Override
     public Fragment getFragment() {
         if (fragment == null)
-            fragment = new AnimateIntroFragment().setStep(AnimateIntroFragment.IntroStep.Three);
+            fragment = new AnimateIntroFragment().setStep(AnimateIntroFragment.IntroStep.Four);
         return fragment;
     }
 
@@ -32,7 +33,7 @@ public class IntroStepThree implements Slide {
 
     @Override
     public boolean canGoForward() {
-        return true;
+        return false;
     }
 
     @Override

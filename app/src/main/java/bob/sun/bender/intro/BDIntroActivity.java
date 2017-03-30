@@ -24,11 +24,12 @@ public class BDIntroActivity extends IntroActivity {
         addSlide(new IntroStepOne());
         addSlide(new IntroStepTwo());
         addSlide(new IntroStepThree());
+        addSlide(new IntroStepFour());
 
         addOnNavigationBlockedListener(new OnNavigationBlockedListener() {
             @Override
             public void onNavigationBlocked(int position, int direction) {
-                if (position == 2 && direction == DIRECTION_FORWARD) {
+                if (position == 3 && direction == DIRECTION_FORWARD) {
                     UserDefaults.getStaticInstance(BDIntroActivity.this.getApplicationContext()).introShown();
                     finish();
                 }

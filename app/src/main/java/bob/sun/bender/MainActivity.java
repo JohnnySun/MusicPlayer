@@ -28,6 +28,7 @@ import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
 
 import com.crashlytics.android.Crashlytics;
+import com.huami.mibandscan.MiBandScan;
 
 import bob.sun.bender.intro.BDIntroActivity;
 import io.fabric.sdk.android.Fabric;
@@ -90,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
 
     private Intent serviceIntent;
 
+    private MiBandScan miBandScan;
+
     private SongBean lastSongBean;
     private ArrayList lastPlayList;
     private boolean permissionGranted;
@@ -118,6 +121,10 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
         if (ud.shouldShowIntro()) {
             Intent intent = new Intent(this, BDIntroActivity.class);
             startActivity(intent);
+        }
+
+        if (miBandScan == null) {
+            // miBandScan = new MiBandScan()
         }
 
     }

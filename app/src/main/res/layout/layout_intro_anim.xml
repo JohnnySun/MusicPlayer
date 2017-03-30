@@ -89,6 +89,20 @@
             android:layout_alignTop="@id/fake_wheel"
             android:layout_alignBottom="@id/fake_wheel"
             android:id="@+id/id_image_rotate"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:layout_margin="37dp"
+            android:src="@drawable/album"
+            android:layout_alignStart="@id/fake_wheel"
+            android:layout_alignEnd="@id/fake_wheel"
+            android:layout_alignTop="@id/fake_wheel"
+            android:layout_alignBottom="@id/fake_wheel"
+            android:id="@+id/id_image_miband"
+            android:visibility="gone"
+
+            />
 
         <ImageView
             android:layout_width="90dp"
@@ -117,6 +131,7 @@
             android:gravity="center"
             android:textSize="16dp"
             android:id="@+id/intro_text_step_two"
+            android:visibility="gone"
             android:text="@string/finger_spinning_on_wheel_will_control_the_screen"/>
         <TextView
             android:layout_width="match_parent"
@@ -128,6 +143,20 @@
             android:gravity="center"
             android:textSize="16dp"
             android:id="@+id/intro_text_step_three"
+            android:visibility="gone"
             android:text="@string/tap_on_middle_button_to_select"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:visibility="gone"
+            android:id="@+id/intro_text_step_four"
+            android:text="@string/connect_miband_get_control_by_your_body" />
+
     </FrameLayout>
 </LinearLayout>

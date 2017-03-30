@@ -134,12 +134,19 @@ class MiBandAdapter implements BluetoothAdapter.LeScanCallback {
 
     private String findIdByMac(String address) {
         if (miBandScanConfig.getAccessList() != null) {
-            for (HashMap<Integer, String> item : miBandScanConfig.getAccessList()) {
-                String mac = item.get(MiBandScanConfig.ACCESS_MAC);
-                if (mac.equals(convertAddress(address))) {
-                    return item.get(MiBandScanConfig.ACCESS_OPENID);
+            // 这里复用一下SDK， 如果传入空的list默认返回所有的手环数据
+            if(miBandScanConfig.getAccessList().size() != 0) {
+                // 仅仅返回特定的数据
+                for (HashMap<Integer, String> item : miBandScanConfig.getAccessList()) {
+                    String mac = item.get(MiBandScanConfig.ACCESS_MAC);
+                    if (mac.equals(convertAddress(address))) {
+                        return item.get(MiBandScanConfig.ACCESS_OPENID);
+                    }
                 }
+            } else {
+                return address;
             }
+
         }
         return "";
     }
