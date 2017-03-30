@@ -40,6 +40,7 @@ public class SettingAdapter {
         menutItems.add(new MenuMeta(r.getLocalized(R.string.get_source_code),false, MenuMeta.MenuType.GetSourceCode));
         menutItems.add(new MenuMeta(r.getLocalized(R.string.contact_us),false, MenuMeta.MenuType.ContactUs));
         menutItems.add(new MenuMeta(r.getLocalized(R.string.about),false, MenuMeta.MenuType.About));
+        menutItems.add(new MenuMeta("Debug", false, MenuMeta.MenuType.Debug));
     }
 
     public SettingsAdapter getAdapter(){
@@ -93,6 +94,9 @@ public class SettingAdapter {
                 case ContactUs:
                     holder.configureWithStrings(item.itemName, null, item.highlight);
                     break;
+                case Debug:
+                    holder.configureWithStrings(item.itemName, null, item.highlight);
+
             }
 //            holder.configureWithString(arrayList.get(position).itemName, arrayList.get(position).highlight ? VHListItem.Status.ListItemHighlighted : VHListItem.Status.ListItemNormal);
         }

@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/libraries/coverflow" />
             <option value="$PROJECT_DIR$/libraries/material-intro" />
+            <option value="$PROJECT_DIR$/mibandscan" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

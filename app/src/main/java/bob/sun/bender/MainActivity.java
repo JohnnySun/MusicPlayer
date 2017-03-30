@@ -697,6 +697,11 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
                 break;
             case SelectionDetail.MENU_TYPE_SETTING:
                 switch ((MenuMeta.MenuType)detail.getData()){
+                    case Debug:
+                        AboutFragment debugFragment = new AboutFragment();
+                        fragmentManager.beginTransaction().add(R.id.id_screen_fragment_container,debugFragment).hide(debugFragment).commit();
+                        switchFragmentTo(debugFragment, true);
+                        break;
                     case About:
                         AboutFragment aboutFragment = new AboutFragment();
                         fragmentManager.beginTransaction().add(R.id.id_screen_fragment_container,aboutFragment).hide(aboutFragment).commit();

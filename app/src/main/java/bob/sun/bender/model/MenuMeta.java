@@ -20,6 +20,7 @@ public class MenuMeta {
         RepeatSettings,
         GetSourceCode,
         ContactUs,
+        Debug,
     }
     public String itemName;
     public boolean highlight;
