@@ -36,5 +36,7 @@
     <string name="nobody">无</string>
     <string name="nothing">无</string>
     <string name="contact_me_at">给我发邮件</string>
+    <string name="connect_band">连接手环</string>
+    <string name="search_band">搜索手环</string>
 
 </resources>

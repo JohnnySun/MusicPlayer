@@ -41,12 +41,7 @@ public class MiBandScan {
     public boolean config(String[] accessOpenId) {
         // 检查配置是否有误
         if ( miBandScanCallBack != null) {
-            if (accessOpenId.length == 0) {
-                miBandScanCallBack.onStatus(MiBandScanStatus.CONFIG_FAIL);
-                return false;
-            } else {
-                miBandScanCallBack.onStatus(MiBandScanStatus.CONFIG_SUCCESS);
-            }
+            miBandScanCallBack.onStatus(MiBandScanStatus.CONFIG_SUCCESS);
         }
 
         this.miBandScanConfig = new MiBandScanConfig(accessOpenId);

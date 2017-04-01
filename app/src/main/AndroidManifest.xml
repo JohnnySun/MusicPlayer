@@ -11,6 +11,11 @@
         For wheel click
     -->
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <!--
+        For miband connect
+    -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <permission android:name="sun.bob.bender.allow_broadcast"
         android:protectionLevel="signature"/>

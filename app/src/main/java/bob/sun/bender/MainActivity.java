@@ -30,6 +30,7 @@ import com.anthonycr.grant.PermissionsResultAction;
 import com.crashlytics.android.Crashlytics;
 import com.huami.mibandscan.MiBandScan;
 
+import bob.sun.bender.fragments.BandConnectFragment;
 import bob.sun.bender.intro.BDIntroActivity;
 import io.fabric.sdk.android.Fabric;
 import java.io.File;
@@ -245,6 +246,8 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
                 new String[]{
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.BLUETOOTH,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
                 })) {
             permissionGranted = true;
             return;
@@ -262,6 +265,8 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
                         new String[]{
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.BLUETOOTH,
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
                         });
             }
         });
@@ -705,7 +710,7 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
             case SelectionDetail.MENU_TYPE_SETTING:
                 switch ((MenuMeta.MenuType)detail.getData()){
                     case Debug:
-                        AboutFragment debugFragment = new AboutFragment();
+                        BandConnectFragment debugFragment = new BandConnectFragment();
                         fragmentManager.beginTransaction().add(R.id.id_screen_fragment_container,debugFragment).hide(debugFragment).commit();
                         switchFragmentTo(debugFragment, true);
                         break;

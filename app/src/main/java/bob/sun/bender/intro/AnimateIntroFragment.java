@@ -48,7 +48,7 @@ public class AnimateIntroFragment extends Fragment {
             tap.setVisibility(View.VISIBLE);
             band.setVisibility(View.GONE);
         } else if (step == IntroStep.Four) {
-            wheel.setVisibility(View.GONE);
+            wheel.setVisibility(View.INVISIBLE);
             rotate.setVisibility(View.GONE);
             tap.setVisibility(View.GONE);
             band.setVisibility(View.VISIBLE);

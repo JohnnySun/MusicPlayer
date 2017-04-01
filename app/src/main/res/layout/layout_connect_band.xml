@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:text="@string/connect_band"
+        android:layout_marginBottom="3dp"
+        android:id="@+id/id_tittle"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="BandMac:"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@id/id_tittle"
+        android:id="@+id/id_bandmac"
+        />
+    <Button
+        android:id="@+id/id_search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search_band"
+        android:layout_alignBaseline="@+id/id_bandmac"
+        android:layout_alignBottom="@+id/id_bandmac"
+        android:layout_alignParentEnd="true" />
+    <ListView
+        android:id="@+id/id_list_band"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_search_button"/>
+</RelativeLayout>
