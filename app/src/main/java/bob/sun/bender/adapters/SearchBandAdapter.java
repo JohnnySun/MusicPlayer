@@ -24,7 +24,11 @@ public class SearchBandAdapter extends BaseAdapter {
     }
 
     public void add(MiBandDevice device) {
-        data.add(device);
+        for (MiBandDevice item : data) {
+            if (!item.getBandMac().equals(device.getBandMac())) {
+                data.add(device);
+            }
+        }
     }
 
     @Override
@@ -55,8 +59,9 @@ public class SearchBandAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        String rssi = Integer.toString(getItem(position).getRssi());
         holder.bandMac.setText(getItem(position).getBandMac());
-        holder.rssi.setText(getItem(position).getRssi());
+        //holder.rssi.setText(rssi);
         return  convertView;
     }
 

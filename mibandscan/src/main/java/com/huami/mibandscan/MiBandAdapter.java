@@ -91,7 +91,7 @@ class MiBandAdapter implements BluetoothAdapter.LeScanCallback {
                         try {
                             BluetoothDevice device = result.getDevice();
                             byte[] scanRecord = result.getScanRecord().getBytes();
-                            if (isHuamiDevice(scanRecord) && isOnService()) {
+                            if (isHuamiDevice(scanRecord)) {
                                 if (checkAccessBands(device)) {
                                     // noinspection ResourceType
                                     if (device.getName().contains("MI")) {
@@ -120,6 +120,11 @@ class MiBandAdapter implements BluetoothAdapter.LeScanCallback {
     // 检查是否在白名单中
     private boolean checkAccessBands(BluetoothDevice device) {
         if (miBandScanConfig.getAccessList() != null) {
+            if (miBandScanConfig.getAccessList().size() == 0) {
+                // 如果列表为空，返回所有数据
+                return true;
+            }
+
             for (HashMap<Integer, String> item : miBandScanConfig.getAccessList()) {
                 String mac = item.get(MiBandScanConfig.ACCESS_MAC);
                 String address = convertAddress(device.getAddress());

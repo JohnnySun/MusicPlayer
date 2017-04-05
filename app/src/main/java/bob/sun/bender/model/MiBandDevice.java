@@ -10,10 +10,10 @@ import com.huami.mibandscan.MiBandScanResult;
 
 public class MiBandDevice {
 
-    String bandMac;
-    int rssi;
-    BluetoothDevice device;
-    MiBandScanResult result;
+    private String bandMac;
+    private int rssi;
+    private BluetoothDevice device;
+    private MiBandScanResult result;
 
     public MiBandScanResult getResult() {
         return result;
