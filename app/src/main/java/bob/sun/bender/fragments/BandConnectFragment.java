@@ -2,6 +2,7 @@ package bob.sun.bender.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import bob.sun.bender.model.MiBandDevice;
 import bob.sun.bender.model.SelectionDetail;
 
 /**
- * Created by bmy001 on 西暦17/04/01.
+ * Created by Johnny on 西暦17/04/01.
  */
 
 public class BandConnectFragment extends Fragment implements OnTickListener, OnBandFoundListener {
@@ -44,14 +45,23 @@ public class BandConnectFragment extends Fragment implements OnTickListener, OnB
             @Override
             public void onClick(View v) {
                 if (!miBandSearchInstance.isStartScan()) {
-                    miBandSearchInstance.startScan(BandConnectFragment.this);
+                    if (miBandSearchInstance.startScan(BandConnectFragment.this)) {
+                        searchBtn.setText(R.string.stop_scan);
+                    }
                 } else {
                     miBandSearchInstance.stopScan();
+                    searchBtn.setText(R.string.start_scan);
                 }
             }
         });
 
         return ret;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        miBandSearchInstance.stopScan();
     }
 
     @Override
@@ -76,7 +86,6 @@ public class BandConnectFragment extends Fragment implements OnTickListener, OnB
     @Override
     public void onData(MiBandDevice device) {
         searchBandAdapter.add(device);
-        searchBandAdapter.notifyDataSetChanged();
     }
 
     @Override

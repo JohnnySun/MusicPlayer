@@ -38,4 +38,6 @@
     <string name="contact_me_at">Contact me at</string>
     <string name="connect_band">Connect Band</string>
     <string name="search_band">Search Band</string>
+    <string name="start_scan">Start Scan</string>
+    <string name="stop_scan">Stop Scan</string>
 </resources>
