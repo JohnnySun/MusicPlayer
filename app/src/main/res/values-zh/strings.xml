@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Prodigal</string>
+    <string name="app_name">PodPlayer</string>
     <string name="albums">专辑</string>
     <string name="artists">艺术家</string>
     <string name="songs">歌曲</string>
@@ -12,6 +12,7 @@
     <string name="shuffle_songs">随机全部</string>
     <string name="brought_you_by">来自</string>
     <string name="about">关于</string>
+    <string name="connect">连接手环</string>
     <string name="shuffle">随机</string>
     <string name="repeat">重复</string>
     <string name="get_source_code">获取源代码</string>

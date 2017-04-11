@@ -14,6 +14,7 @@
     <string name="nothing">Nothing</string>
     <string name="nobody">Nobody</string>
     <string name="about">About</string>
+    <string name="connect">Connect Band</string>
     <string name="shuffle">Shuffle</string>
     <string name="repeat">Repeat</string>
     <string name="get_source_code">Get Source Code</string>

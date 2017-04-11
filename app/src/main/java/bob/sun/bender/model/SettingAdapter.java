@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import bob.sun.bender.R;
 import bob.sun.bender.adapters.VHSetting;
 import bob.sun.bender.utils.ResUtil;
-import bob.sun.bender.adapters.VHListItem;
 import bob.sun.bender.utils.UserDefaults;
 
 /**
@@ -40,7 +39,7 @@ public class SettingAdapter {
         menutItems.add(new MenuMeta(r.getLocalized(R.string.get_source_code),false, MenuMeta.MenuType.GetSourceCode));
         menutItems.add(new MenuMeta(r.getLocalized(R.string.contact_us),false, MenuMeta.MenuType.ContactUs));
         menutItems.add(new MenuMeta(r.getLocalized(R.string.about),false, MenuMeta.MenuType.About));
-        menutItems.add(new MenuMeta("Debug", false, MenuMeta.MenuType.Debug));
+        menutItems.add(new MenuMeta(r.getLocalized(R.string.connect), false, MenuMeta.MenuType.Connect));
     }
 
     public SettingsAdapter getAdapter(){
@@ -94,7 +93,7 @@ public class SettingAdapter {
                 case ContactUs:
                     holder.configureWithStrings(item.itemName, null, item.highlight);
                     break;
-                case Debug:
+                case Connect:
                     holder.configureWithStrings(item.itemName, null, item.highlight);
 
             }

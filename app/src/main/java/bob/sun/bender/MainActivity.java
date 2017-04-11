@@ -207,6 +207,12 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
         wheelView.setOnButtonListener(this);
         wheelView.setOnTickListener(mainMenu);
         this.currentTickObject = mainMenu;
+
+        String bandMac = getBondBand();
+        if (bandMac.length() > 0) {
+            Toast.makeText(this, "Bond Band Mac:" + bandMac, Toast.LENGTH_SHORT).show();
+        }
+
         return;
     }
 
@@ -709,10 +715,10 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
                 break;
             case SelectionDetail.MENU_TYPE_SETTING:
                 switch ((MenuMeta.MenuType)detail.getData()){
-                    case Debug:
-                        BandConnectFragment debugFragment = new BandConnectFragment();
-                        fragmentManager.beginTransaction().add(R.id.id_screen_fragment_container,debugFragment).hide(debugFragment).commit();
-                        switchFragmentTo(debugFragment, true);
+                    case Connect:
+                        BandConnectFragment connectFragment = new BandConnectFragment();
+                        fragmentManager.beginTransaction().add(R.id.id_screen_fragment_container,connectFragment).hide(connectFragment).commit();
+                        switchFragmentTo(connectFragment, true);
                         break;
                     case About:
                         AboutFragment aboutFragment = new AboutFragment();
@@ -758,6 +764,12 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
         currentFragment = fragment;
         this.currentTickObject = (OnTickListener) fragment;
         wheelView.setOnTickListener((OnTickListener) fragment);
+    }
+
+    private String getBondBand() {
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                BandConnectFragment.preference_file_key,Context.MODE_PRIVATE);
+        return sharedPref.getString("BAND_MAC", "");
     }
 
     class ServiceBroadcastReceiver extends BroadcastReceiver {
