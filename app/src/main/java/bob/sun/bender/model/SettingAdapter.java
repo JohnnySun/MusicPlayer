@@ -98,7 +98,7 @@ public class SettingAdapter {
                     holder.configureWithStrings(item.itemName, null, item.highlight);
                     break;
                 case Debug:
-                    holder.configureWithStrings(item.itemName, null, item.highlight);
+                    holder.configureWithStrings(item.itemName, resUtil.getBoolString(BandRepo.isDebugger()), item.highlight);
                     break;
 
             }

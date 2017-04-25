@@ -12,15 +12,12 @@ import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import bob.sun.bender.R;
 import bob.sun.bender.controller.OnButtonListener;
 import bob.sun.bender.controller.OnTickListener;
-import bob.sun.bender.model.StepRepo;
-import bob.sun.bender.utils.ColorUtil;
 import bob.sun.bender.utils.VibrateUtil;
 
 /**

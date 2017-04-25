@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -35,7 +34,7 @@ import com.huami.mibandscan.MiBandScan;
 import bob.sun.bender.fragments.BandConnectFragment;
 import bob.sun.bender.fragments.DebugFragment;
 import bob.sun.bender.intro.BDIntroActivity;
-import bob.sun.bender.model.StepRepo;
+import bob.sun.bender.model.BandRepo;
 import bob.sun.bender.utils.ColorUtil;
 import io.fabric.sdk.android.Fabric;
 import java.io.File;
@@ -51,7 +50,6 @@ import java.util.Stack;
 import bob.sun.bender.adapters.SimpleListMenuAdapter;
 import bob.sun.bender.controller.OnButtonListener;
 import bob.sun.bender.controller.OnTickListener;
-import bob.sun.bender.fragments.AboutFragment;
 import bob.sun.bender.fragments.CoverflowFragment;
 import bob.sun.bender.fragments.MainMenuFragment;
 import bob.sun.bender.fragments.NowPlayingFragment;
@@ -355,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
     public void onResume(){
         super.onResume();
         Log.d(TAG, "onResume: ");
-        String color = ColorUtil.getColorFromMinuteSteps(StepRepo.getAvgStepsPerMin());
+        String color = ColorUtil.getColorFromMinuteSteps(BandRepo.getAvgStepsPerMin());
         wheelView.setColor(color);
         mainLayout.setBackgroundColor(Color.parseColor(color));
         getWindow().setStatusBarColor(Color.parseColor(color));
@@ -794,8 +792,8 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
                 BandConnectFragment.preference_file_key,Context.MODE_PRIVATE);
         this.bandMac = sharedPref.getString("BAND_MAC", "");
         boolean isDebugger = sharedPref.getBoolean("debug", false);
-        StepRepo.setDebugger(isDebugger);
-        StepRepo.setDevAvgStepsPerMin(sharedPref.getInt("avgStep", 80));
+        BandRepo.setDebugger(isDebugger);
+        BandRepo.setDevAvgStepsPerMin(sharedPref.getInt("avgStep", 80));
 
     }
 
@@ -812,8 +810,8 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
                     mainMenu.refreshCurrentSongIfNeeded();
             } else if (intent.getAction().equals(AppConstants.broadcastBackgroundColorChange)) {
                 Log.d("ServiceReceiver", "onReceive: Change Background");
-                Log.d("ServiceReceiver", "onReceive: avgStepsPerMin is : " + StepRepo.getAvgStepsPerMin());
-                String color = ColorUtil.getColorFromMinuteSteps(StepRepo.getAvgStepsPerMin());
+                Log.d("ServiceReceiver", "onReceive: avgStepsPerMin is : " + BandRepo.getAvgStepsPerMin());
+                String color = ColorUtil.getColorFromMinuteSteps(BandRepo.getAvgStepsPerMin());
                 Log.d(TAG, "onReceive: color is " + color);
                 mainLayout.setBackgroundColor(Color.parseColor(color));
             }

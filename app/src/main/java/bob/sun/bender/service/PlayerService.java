@@ -13,7 +13,6 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.huami.mibandscan.MiBandScan;
 import com.huami.mibandscan.MiBandScanStatus;
 
 import java.io.IOException;
@@ -28,7 +27,7 @@ import bob.sun.bender.fragments.BandConnectFragment;
 import bob.sun.bender.model.MIBandSearchInstance;
 import bob.sun.bender.model.MiBandDevice;
 import bob.sun.bender.model.SongBean;
-import bob.sun.bender.model.StepRepo;
+import bob.sun.bender.model.BandRepo;
 import bob.sun.bender.utils.AppConstants;
 import bob.sun.bender.utils.NotificationUtil;
 import io.fabric.sdk.android.Fabric;
@@ -118,20 +117,20 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
             public void onData(MiBandDevice device) {
                 if (device.getBandMac().equals(getBondBand())) {
                     Log.d(TAG, "BandFound current step is: " + device.getResult().getSteps());
-                    if (StepRepo.getLastSystemTime() == 0) {
-                        StepRepo.setLastSteps(device.getResult().getSteps());
-                        StepRepo.setLastSystemTime(System.currentTimeMillis()/1000L);
-                    } else if (StepRepo.getLastSteps() != device.getResult().getSteps()) {
+                    if (BandRepo.getLastSystemTime() == 0) {
+                        BandRepo.setLastSteps(device.getResult().getSteps());
+                        BandRepo.setLastSystemTime(System.currentTimeMillis()/1000L);
+                    } else if (BandRepo.getLastSteps() != device.getResult().getSteps()) {
                         // 获得逝去时间，单位s
-                        long time = System.currentTimeMillis()/1000L - StepRepo.getLastSystemTime();
+                        long time = System.currentTimeMillis()/1000L - BandRepo.getLastSystemTime();
                         // 转换成分钟
                         double min = time / 60f;
 
-                        double avgStepPerMin = (device.getResult().getSteps() - StepRepo.getLastSteps()) / min;
-                        StepRepo.setLastSteps(device.getResult().getSteps());
-                        StepRepo.setLastSystemTime(System.currentTimeMillis()/1000L);
-                        StepRepo.setAvgStepsPerMin(avgStepPerMin);
-                        Log.d(TAG, "BandFound current avgStep is: " + StepRepo.getAvgStepsPerMin());
+                        double avgStepPerMin = (device.getResult().getSteps() - BandRepo.getLastSteps()) / min;
+                        BandRepo.setLastSteps(device.getResult().getSteps());
+                        BandRepo.setLastSystemTime(System.currentTimeMillis()/1000L);
+                        BandRepo.setAvgStepsPerMin(avgStepPerMin);
+                        Log.d(TAG, "BandFound current avgStep is: " + BandRepo.getAvgStepsPerMin());
                         Intent msg = new Intent(AppConstants.broadcastBackgroundColorChange);
                         msg.setPackage(PlayerService.this.getApplicationContext().getPackageName());
                         sendBroadcast(msg);

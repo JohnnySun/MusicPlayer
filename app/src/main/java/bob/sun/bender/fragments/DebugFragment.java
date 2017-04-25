@@ -3,7 +3,6 @@ package bob.sun.bender.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,7 @@ import android.widget.Switch;
 import bob.sun.bender.R;
 import bob.sun.bender.controller.OnTickListener;
 import bob.sun.bender.model.SelectionDetail;
-import bob.sun.bender.model.StepRepo;
+import bob.sun.bender.model.BandRepo;
 
 import static bob.sun.bender.fragments.BandConnectFragment.preference_file_key;
 
@@ -54,11 +53,11 @@ public class DebugFragment extends Fragment implements OnTickListener {
         avgStepsPicker = (NumberPicker) ret.findViewById(R.id.avg_steps_picker);
         debugSwitch = (Switch) ret.findViewById(R.id.debug_switch);
 
-        debugSwitch.setChecked(StepRepo.isDebugger());
+        debugSwitch.setChecked(BandRepo.isDebugger());
         debugSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                StepRepo.setDebugger(isChecked);
+                BandRepo.setDebugger(isChecked);
                 saveDebugState(isChecked);
             }
         });
@@ -83,7 +82,7 @@ public class DebugFragment extends Fragment implements OnTickListener {
                         //停止滑动
                         Log.d(TAG, "SCROLL_STATE_IDLE");
                         int value = avgStepsPicker.getValue();
-                        StepRepo.setDevAvgStepsPerMin(value);
+                        BandRepo.setDevAvgStepsPerMin(value);
                         //mTextView.setText(CITYS[mSeletedIndex]);
 
                         //Toast.makeText(MainActivity.this, CITYS[mSeletedIndex], Toast.LENGTH_SHORT).show();
