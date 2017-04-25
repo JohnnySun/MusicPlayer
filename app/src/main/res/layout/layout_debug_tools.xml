@@ -28,17 +28,43 @@
         android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/avg_steps"/>
 
     <NumberPicker
         android:id="@+id/avg_steps_picker"
-        android:layout_width="20dp"
+        android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_below="@id/id_tittle"
         android:layout_alignParentEnd="true"
-        android:scaleX="1.5"
-        android:scaleY="1.5" />
+        android:scaleX="1.3"
+        android:scaleY="1.3" />
 
+    <View
+        android:layout_below="@id/avg_steps_picker"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/text_isSleep"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@id/text_avg_step"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:text="Stub"/>
+
+    <Switch
+        android:layout_below="@+id/text_avg_step"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_width="60dp"
+        android:layout_height="40dp" />
 
 </RelativeLayout>

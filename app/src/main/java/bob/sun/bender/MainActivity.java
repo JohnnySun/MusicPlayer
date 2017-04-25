@@ -24,19 +24,11 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
-
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
-
 import com.crashlytics.android.Crashlytics;
 import com.huami.mibandscan.MiBandScan;
 
-import bob.sun.bender.fragments.BandConnectFragment;
-import bob.sun.bender.fragments.DebugFragment;
-import bob.sun.bender.intro.BDIntroActivity;
-import bob.sun.bender.model.BandRepo;
-import bob.sun.bender.utils.ColorUtil;
-import io.fabric.sdk.android.Fabric;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -50,12 +42,16 @@ import java.util.Stack;
 import bob.sun.bender.adapters.SimpleListMenuAdapter;
 import bob.sun.bender.controller.OnButtonListener;
 import bob.sun.bender.controller.OnTickListener;
+import bob.sun.bender.fragments.BandConnectFragment;
 import bob.sun.bender.fragments.CoverflowFragment;
+import bob.sun.bender.fragments.DebugFragment;
 import bob.sun.bender.fragments.MainMenuFragment;
 import bob.sun.bender.fragments.NowPlayingFragment;
 import bob.sun.bender.fragments.SettingsFragment;
 import bob.sun.bender.fragments.SimpleListFragment;
 import bob.sun.bender.fragments.TwoPanelFragment;
+import bob.sun.bender.intro.BDIntroActivity;
+import bob.sun.bender.model.BandRepo;
 import bob.sun.bender.model.MediaLibrary;
 import bob.sun.bender.model.MenuMeta;
 import bob.sun.bender.model.PlayList;
@@ -64,12 +60,15 @@ import bob.sun.bender.model.SettingAdapter;
 import bob.sun.bender.model.SongBean;
 import bob.sun.bender.service.PlayerService;
 import bob.sun.bender.utils.AIDLDumper;
+import bob.sun.bender.utils.Animation;
 import bob.sun.bender.utils.AppConstants;
+import bob.sun.bender.utils.ColorUtil;
 import bob.sun.bender.utils.NotificationUtil;
-import bob.sun.bender.utils.UserDefaults;
 import bob.sun.bender.utils.ResUtil;
+import bob.sun.bender.utils.UserDefaults;
 import bob.sun.bender.utils.VibrateUtil;
 import bob.sun.bender.view.WheelView;
+import io.fabric.sdk.android.Fabric;
 
 import static bob.sun.bender.service.PlayerService.CMD_PREPARE;
 
@@ -353,10 +352,7 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
     public void onResume(){
         super.onResume();
         Log.d(TAG, "onResume: ");
-        String color = ColorUtil.getColorFromMinuteSteps(BandRepo.getAvgStepsPerMin());
-        wheelView.setColor(color);
-        mainLayout.setBackgroundColor(Color.parseColor(color));
-        getWindow().setStatusBarColor(Color.parseColor(color));
+        AnimateWindowColor();
         if (!permissionGranted) {
             findViewById(R.id.id_holder_no_permission).setVisibility(View.VISIBLE);
             return;
@@ -775,6 +771,7 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
                 break;
         }
     }
+
     private void switchFragmentTo(Fragment fragment, boolean slide){
         fragmentStack.push(currentFragment);
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -797,6 +794,30 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
 
     }
 
+    public void AnimateWindowColor(int startColor, int endColor) {
+        Animation.AnimationUpdateCallback callback = new Animation.AnimationUpdateCallback() {
+            @Override
+            public void onAnimationUpdate(Object... params) {
+                if (params[0] != null) {
+                    if (params[0] instanceof Integer) {
+                        int color = (int) params[0];
+                        MainActivity.this.getWindow().setStatusBarColor(color);
+                        MainActivity.this.getWindow().setNavigationBarColor(color);
+                        wheelView.setColor(color);
+                    }
+                }
+            }
+        };
+        Animation.startColorAnimation(mainLayout, callback, startColor, endColor);
+    }
+
+    private void AnimateWindowColor() {
+        int startColor = getWindow().getStatusBarColor();
+        int endColor = Color.parseColor(
+                ColorUtil.getColorFromMinuteSteps(BandRepo.getAvgStepsPerMin()));
+        AnimateWindowColor(startColor, endColor);
+    }
+
     class ServiceBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -811,9 +832,7 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
             } else if (intent.getAction().equals(AppConstants.broadcastBackgroundColorChange)) {
                 Log.d("ServiceReceiver", "onReceive: Change Background");
                 Log.d("ServiceReceiver", "onReceive: avgStepsPerMin is : " + BandRepo.getAvgStepsPerMin());
-                String color = ColorUtil.getColorFromMinuteSteps(BandRepo.getAvgStepsPerMin());
-                Log.d(TAG, "onReceive: color is " + color);
-                mainLayout.setBackgroundColor(Color.parseColor(color));
+                AnimateWindowColor();
             }
         }
     }

@@ -87,13 +87,12 @@ public class WheelView extends View {
         };
     }
 
-    public void setColor(String color) {
-        int rippleColor = Color.parseColor(color);
+    public void setColor(int color) {
         paintOut.setColor(getResources().getColor(android.R.color.white));
-        paintIn.setColor(rippleColor);
+        paintIn.setColor(color);
         paintOut.setAntiAlias(true);
         paintIn.setAntiAlias(true);
-        ripplePaint.setColor(rippleColor);
+        ripplePaint.setColor(color);
         ripplePaint.setAlpha(80);
         paintOut.setShadowLayer(8f, 0.0f, 8f,
                 Color.GRAY);

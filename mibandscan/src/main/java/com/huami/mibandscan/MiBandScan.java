@@ -4,9 +4,7 @@ import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.ScanSettings;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,11 +85,13 @@ public class MiBandScan {
             }
         } else {
             mScanning = false;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mBluetoothAdapter.getBluetoothLeScanner().stopScan(mMiBandAdapter.getScanCallback());
-            } else {
-                // noinspection all
-                mBluetoothAdapter.stopLeScan(mMiBandAdapter);
+            if (isBluetoothEnabled()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mBluetoothAdapter.getBluetoothLeScanner().stopScan(mMiBandAdapter.getScanCallback());
+                } else {
+                    // noinspection all
+                    mBluetoothAdapter.stopLeScan(mMiBandAdapter);
+                }
             }
             miBandScanCallBack.onStatus(MiBandScanStatus.STOP_SUCCESS);
             return true;

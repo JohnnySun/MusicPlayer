@@ -2,6 +2,7 @@ package bob.sun.bender.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,10 +13,12 @@ import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 
+import bob.sun.bender.MainActivity;
 import bob.sun.bender.R;
 import bob.sun.bender.controller.OnTickListener;
-import bob.sun.bender.model.SelectionDetail;
 import bob.sun.bender.model.BandRepo;
+import bob.sun.bender.model.SelectionDetail;
+import bob.sun.bender.utils.ColorUtil;
 
 import static bob.sun.bender.fragments.BandConnectFragment.preference_file_key;
 
@@ -29,13 +32,19 @@ public class DebugFragment extends Fragment implements OnTickListener {
     private NumberPicker avgStepsPicker;
     private Switch debugSwitch;
 
-    private void saveData(int value) {
+    private void saveSetpData(int value) {
         Log.i(TAG, "save dev setp data: " + value);
         SharedPreferences sharedPref = getActivity()
                 .getSharedPreferences(preference_file_key, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt("avgStep", value);
         editor.apply();
+    }
+
+    private int getSetpData() {
+        SharedPreferences sharedPref = getActivity()
+                .getSharedPreferences(preference_file_key, Context.MODE_PRIVATE);
+        return sharedPref.getInt("avgStep", 60);
     }
 
     private void saveDebugState(boolean isDebug) {
@@ -62,9 +71,10 @@ public class DebugFragment extends Fragment implements OnTickListener {
             }
         });
 
+        avgStepsPicker.setClickable(false);
         avgStepsPicker.setMinValue(0);
         avgStepsPicker.setMaxValue(200);
-        avgStepsPicker.setValue(60);
+        avgStepsPicker.setValue(getSetpData());
 
         avgStepsPicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
             @Override
@@ -83,6 +93,7 @@ public class DebugFragment extends Fragment implements OnTickListener {
                         Log.d(TAG, "SCROLL_STATE_IDLE");
                         int value = avgStepsPicker.getValue();
                         BandRepo.setDevAvgStepsPerMin(value);
+                        saveSetpData(value);
                         //mTextView.setText(CITYS[mSeletedIndex]);
 
                         //Toast.makeText(MainActivity.this, CITYS[mSeletedIndex], Toast.LENGTH_SHORT).show();
@@ -106,5 +117,15 @@ public class DebugFragment extends Fragment implements OnTickListener {
     @Override
     public SelectionDetail getCurrentSelection() {
         return null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MainActivity activity = (MainActivity) getActivity();
+        int startColor = activity.getWindow().getStatusBarColor();
+        int endColor = Color.parseColor(
+                ColorUtil.getColorFromMinuteSteps(BandRepo.getAvgStepsPerMin()));
+        activity.AnimateWindowColor(startColor, endColor);
     }
 }
