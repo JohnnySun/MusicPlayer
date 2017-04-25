@@ -18,6 +18,7 @@ public class AppConstants {
     public static final String kRepeat = "mpod_app_settings.key.repeat";
 
     public static final String broadcastSongChange = "sun.bob.bender.songchanged";
+    public static final String broadcastBackgroundColorChange = "sun.bob.bender.background_changed";
     public static final String broadcastPermission = "sun.bob.bender.allow_broadcast";
 
     private static final String playlistfile = "/data/data/bob.sun.bender/playlistobject";

@@ -19,6 +19,8 @@ import android.view.View;
 import bob.sun.bender.R;
 import bob.sun.bender.controller.OnButtonListener;
 import bob.sun.bender.controller.OnTickListener;
+import bob.sun.bender.model.StepRepo;
+import bob.sun.bender.utils.ColorUtil;
 import bob.sun.bender.utils.VibrateUtil;
 
 /**
@@ -58,12 +60,13 @@ public class WheelView extends View {
         paintIn = new Paint();
         paintOut = new Paint();
         ripplePaint = new Paint();
-        paintOut.setColor(getResources().getColor(R.color.colorAccent));
-        paintIn.setColor(getResources().getColor(R.color.colorPrimary));
+        int rippleColor = 0;
+
+        paintOut.setColor(getResources().getColor(android.R.color.white));
+        paintIn.setColor(getContext().getResources().getColor(R.color.colorPrimary));
         paintOut.setAntiAlias(true);
         paintIn.setAntiAlias(true);
 
-        int rippleColor = 0;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             rippleColor = getContext().getResources().getColor(R.color.colorPrimary, null);
         } else {
@@ -85,6 +88,19 @@ public class WheelView extends View {
                 invalidate();
             }
         };
+    }
+
+    public void setColor(String color) {
+        int rippleColor = Color.parseColor(color);
+        paintOut.setColor(getResources().getColor(android.R.color.white));
+        paintIn.setColor(rippleColor);
+        paintOut.setAntiAlias(true);
+        paintIn.setAntiAlias(true);
+        ripplePaint.setColor(rippleColor);
+        ripplePaint.setAlpha(80);
+        paintOut.setShadowLayer(8f, 0.0f, 8f,
+                Color.GRAY);
+        invalidate();
     }
 
     @Override

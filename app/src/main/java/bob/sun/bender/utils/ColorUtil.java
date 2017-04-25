@@ -27,7 +27,7 @@ public class ColorUtil {
      * @param steps 每分钟的步频
      * @return 返回的颜色 RGB表示
      */
-    public static String getColorFromMinuteSteps(int steps) {
+    public static String getColorFromMinuteSteps(double steps) {
         if(steps > 160) {
             // 步频大于160，则直接返回深红色
             return COLOR_DEEP_ORANGE;
@@ -37,7 +37,7 @@ public class ColorUtil {
             return COLOR_BLUE;
         }
 
-        float calc = (steps - 60) / 100.0f;
+        double calc = (steps - 60) / 100.0f;
         DecimalFormat df = new DecimalFormat("#.#");
 
         switch (df.format(calc)) {

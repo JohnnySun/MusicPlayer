@@ -117,3 +117,4 @@ Temporary Items
 
 #Fabric
 app/fabric.properties
+#!/app/src/main/res/layout/layout_debug_tools.xml

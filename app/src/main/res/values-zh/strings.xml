@@ -13,6 +13,7 @@
     <string name="brought_you_by">来自</string>
     <string name="about">关于</string>
     <string name="connect">连接手环</string>
+    <string name="debug">调试器</string>
     <string name="shuffle">随机</string>
     <string name="repeat">重复</string>
     <string name="get_source_code">获取源代码</string>
@@ -41,4 +42,7 @@
     <string name="search_band">搜索手环</string>
     <string name="start_scan">扫描手环</string>
     <string name="stop_scan">停止手环</string>
+    
+    <string name="debug_tools">调试工具</string>
+    <string name="avg_steps">设置平均步数</string>
 </resources>

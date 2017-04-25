@@ -66,7 +66,7 @@ public class MiBandScan {
      * @param enable 当值为真时开始扫描手环，值为假时停止扫描手环
      */
     public boolean startScan(final boolean enable) {
-        if (miBandScanConfig == null) {
+        if (miBandScanConfig == null || mBluetoothAdapter == null) {
             return false;
         }
 

@@ -1,20 +1,34 @@
 package bob.sun.bender.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.huami.mibandscan.MiBandScan;
+import com.huami.mibandscan.MiBandScanStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import bob.sun.bender.PlayerServiceAIDL;
+import bob.sun.bender.controller.OnBandFoundListener;
+import bob.sun.bender.fragments.BandConnectFragment;
+import bob.sun.bender.model.MIBandSearchInstance;
+import bob.sun.bender.model.MiBandDevice;
 import bob.sun.bender.model.SongBean;
+import bob.sun.bender.model.StepRepo;
 import bob.sun.bender.utils.AppConstants;
 import bob.sun.bender.utils.NotificationUtil;
 import io.fabric.sdk.android.Fabric;
@@ -24,12 +38,16 @@ import io.fabric.sdk.android.Fabric;
  */
 public class PlayerService extends Service implements MediaPlayer.OnCompletionListener,
         AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnPreparedListener {
+    public static final String TAG = "PlayerService";
     private MediaPlayer mediaPlayer;
     private ArrayList<SongBean> playlist;
     private SongBean currentSong;
     private int index, repeatMode;
     private boolean shuffle;
     private AudioManager audioManager;
+    private Timer timer;
+    private TimerTask task;
+    private Handler handler;
     public static final int CMD_PLAY = 1;
     public static final int CMD_PAUSE = 2;
     public static final int CMD_RESUME = 3;
@@ -59,8 +77,82 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         mediaPlayer.setOnPreparedListener(this);
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        // 因为在播放音乐时系统回保持唤醒，所以这里直接使用timertask，不用担心cpu休眠后不分配时间片的问题
+
+        timer = new Timer(true);
+        handler = new Handler(Looper.getMainLooper());
+
+        task = new TimerTask() {
+            public void run() {
+                //Looper.prepare();
+                //每次需要执行的代码放到这里
+                calcAvgStep();
+                //Log.d(TAG, "test broadcast");
+                //Intent msg = new Intent(AppConstants.broadcastBackgroundColorChange);
+                //msg.setPackage(PlayerService.this.getApplicationContext().getPackageName());
+                //sendBroadcast(msg);
+                //Looper.loop();
+            }
+        };
+
+        timer.schedule(task, 100, 2*10*1000);
+
+
 
     }
+
+    /**
+     * 返回在自从上一次扫描到步数变化的本次扫描到步数变化后的平均步数
+     * 如果步数没有变化，则返回上一次的平均步数
+     */
+    private void calcAvgStep() {
+        Log.d(TAG, "running");
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MIBandSearchInstance.getInstance().stopScan();
+            }
+        }, 10*1000);
+        MIBandSearchInstance.getInstance().startScan(new OnBandFoundListener() {
+            @Override
+            public void onData(MiBandDevice device) {
+                if (device.getBandMac().equals(getBondBand())) {
+                    Log.d(TAG, "BandFound current step is: " + device.getResult().getSteps());
+                    if (StepRepo.getLastSystemTime() == 0) {
+                        StepRepo.setLastSteps(device.getResult().getSteps());
+                        StepRepo.setLastSystemTime(System.currentTimeMillis()/1000L);
+                    } else if (StepRepo.getLastSteps() != device.getResult().getSteps()) {
+                        // 获得逝去时间，单位s
+                        long time = System.currentTimeMillis()/1000L - StepRepo.getLastSystemTime();
+                        // 转换成分钟
+                        double min = time / 60f;
+
+                        double avgStepPerMin = (device.getResult().getSteps() - StepRepo.getLastSteps()) / min;
+                        StepRepo.setLastSteps(device.getResult().getSteps());
+                        StepRepo.setLastSystemTime(System.currentTimeMillis()/1000L);
+                        StepRepo.setAvgStepsPerMin(avgStepPerMin);
+                        Log.d(TAG, "BandFound current avgStep is: " + StepRepo.getAvgStepsPerMin());
+                        Intent msg = new Intent(AppConstants.broadcastBackgroundColorChange);
+                        msg.setPackage(PlayerService.this.getApplicationContext().getPackageName());
+                        sendBroadcast(msg);
+                    }
+                    MIBandSearchInstance.getInstance().stopScan();
+                }
+            }
+
+            @Override
+            public void onStatus(MiBandScanStatus scanStatus) {
+
+            }
+        });
+    }
+
+    private String getBondBand() {
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                BandConnectFragment.preference_file_key, Context.MODE_PRIVATE);
+        return sharedPref.getString("BAND_MAC", "");
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags,int startId){
         if (intent == null){
@@ -286,6 +378,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
     }
     @Override
     public void onDestroy() {
+        task.cancel();
         audioManager.abandonAudioFocus(this);
         NotificationUtil.getStaticInstance(getApplicationContext()).dismiss();
         try{

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -31,7 +33,10 @@ import com.crashlytics.android.Crashlytics;
 import com.huami.mibandscan.MiBandScan;
 
 import bob.sun.bender.fragments.BandConnectFragment;
+import bob.sun.bender.fragments.DebugFragment;
 import bob.sun.bender.intro.BDIntroActivity;
+import bob.sun.bender.model.StepRepo;
+import bob.sun.bender.utils.ColorUtil;
 import io.fabric.sdk.android.Fabric;
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,6 +77,7 @@ import static bob.sun.bender.service.PlayerService.CMD_PREPARE;
 
 
 public class MainActivity extends AppCompatActivity implements OnButtonListener {
+    public static final String TAG = "MainAvtivity";
     private FragmentManager fragmentManager;
     private MainMenuFragment mainMenu;
     private SimpleListFragment songsList;
@@ -84,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
 
     private ServiceBroadcastReceiver receiver;
 
+    private View mainLayout;
     private WheelView wheelView;
     public PlayerServiceAIDL playerService;
     private OnTickListener currentTickObject;
@@ -99,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
     private boolean permissionGranted;
     private boolean keepDancing;
 
+    private String bandMac;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +118,10 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
         MediaLibrary.getStaticInstance(this);
         ResUtil.getInstance(this);
         UserDefaults ud = UserDefaults.getStaticInstance(this);
+
+        mainLayout = findViewById(R.id.main_layout);
+
+        restoreSetting();
 
         wheelView = (WheelView) findViewById(R.id.id_wheel_view);
 
@@ -208,7 +221,6 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
         wheelView.setOnTickListener(mainMenu);
         this.currentTickObject = mainMenu;
 
-        String bandMac = getBondBand();
         if (bandMac.length() > 0) {
             Toast.makeText(this, "Bond Band Mac:" + bandMac, Toast.LENGTH_SHORT).show();
         }
@@ -306,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
     protected void onStart(){
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(AppConstants.broadcastSongChange);
+        intentFilter.addAction(AppConstants.broadcastBackgroundColorChange);
         if (receiver == null)
             receiver = new ServiceBroadcastReceiver();
         registerReceiver(receiver, intentFilter);
@@ -341,6 +354,11 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
     @Override
     public void onResume(){
         super.onResume();
+        Log.d(TAG, "onResume: ");
+        String color = ColorUtil.getColorFromMinuteSteps(StepRepo.getAvgStepsPerMin());
+        wheelView.setColor(color);
+        mainLayout.setBackgroundColor(Color.parseColor(color));
+        getWindow().setStatusBarColor(Color.parseColor(color));
         if (!permissionGranted) {
             findViewById(R.id.id_holder_no_permission).setVisibility(View.VISIBLE);
             return;
@@ -715,16 +733,21 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
                 break;
             case SelectionDetail.MENU_TYPE_SETTING:
                 switch ((MenuMeta.MenuType)detail.getData()){
+                    case Debug:
+                        DebugFragment debugFragment = new DebugFragment();
+                        fragmentManager.beginTransaction().add(R.id.id_screen_fragment_container,debugFragment).hide(debugFragment).commit();
+                        switchFragmentTo(debugFragment, true);
+                        break;
                     case Connect:
                         BandConnectFragment connectFragment = new BandConnectFragment();
                         fragmentManager.beginTransaction().add(R.id.id_screen_fragment_container,connectFragment).hide(connectFragment).commit();
                         switchFragmentTo(connectFragment, true);
                         break;
-                    case About:
-                        AboutFragment aboutFragment = new AboutFragment();
-                        fragmentManager.beginTransaction().add(R.id.id_screen_fragment_container,aboutFragment).hide(aboutFragment).commit();
-                        switchFragmentTo(aboutFragment, true);
-                        break;
+                    //case About:
+                    //    AboutFragment aboutFragment = new AboutFragment();
+                    //    fragmentManager.beginTransaction().add(R.id.id_screen_fragment_container,aboutFragment).hide(aboutFragment).commit();
+                    //    switchFragmentTo(aboutFragment, true);
+                    //    break;
                     case ShuffleSettings:
                         UserDefaults.getStaticInstance(this).rollShuffle();
                         settingMenu.reloadSettings();
@@ -735,19 +758,19 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
                         settingMenu.reloadSettings();
                         AIDLDumper.updateSettings(playerService);
                         break;
-                    case GetSourceCode:
-                        Intent source = new Intent(Intent.ACTION_VIEW);
-                        source.setData(Uri.parse("https://github.com/SpongeBobSun/Prodigal"));
-                        startActivity(source);
-                        break;
-                    case ContactUs:
-                        Intent contact = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:bobsun@outlook.com"));
-                        contact.setType("text/html");
-                        contact.putExtra(Intent.EXTRA_EMAIL, new String[]{"bobsun@outlook.com"});
-                        contact.putExtra(Intent.EXTRA_SUBJECT, "");
-                        contact.putExtra(Intent.EXTRA_TEXT, "");
-                        startActivity(Intent.createChooser(contact, getResources().getString(R.string.send_mail_using)));
-                        break;
+                    // case GetSourceCode:
+                    //    Intent source = new Intent(Intent.ACTION_VIEW);
+                    //    source.setData(Uri.parse("https://github.com/SpongeBobSun/Prodigal"));
+                    //    startActivity(source);
+                    //    break;
+                    //case ContactUs:
+                    //    Intent contact = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:bobsun@outlook.com"));
+                    //    contact.setType("text/html");
+                    //    contact.putExtra(Intent.EXTRA_EMAIL, new String[]{"bobsun@outlook.com"});
+                    //    contact.putExtra(Intent.EXTRA_SUBJECT, "");
+                    //    contact.putExtra(Intent.EXTRA_TEXT, "");
+                    //    startActivity(Intent.createChooser(contact, getResources().getString(R.string.send_mail_using)));
+                    //    break;
                 }
                 break;
             default:
@@ -766,20 +789,34 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
         wheelView.setOnTickListener((OnTickListener) fragment);
     }
 
-    private String getBondBand() {
+    private void restoreSetting() {
         SharedPreferences sharedPref = this.getSharedPreferences(
                 BandConnectFragment.preference_file_key,Context.MODE_PRIVATE);
-        return sharedPref.getString("BAND_MAC", "");
+        this.bandMac = sharedPref.getString("BAND_MAC", "");
+        boolean isDebugger = sharedPref.getBoolean("debug", false);
+        StepRepo.setDebugger(isDebugger);
+        StepRepo.setDevAvgStepsPerMin(sharedPref.getInt("avgStep", 80));
+
     }
 
     class ServiceBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (nowPlayingFragment != null && !nowPlayingFragment.isHidden())
-                nowPlayingFragment.refreshSong();
-            if (mainMenu != null && !mainMenu.isHidden())
-                mainMenu.refreshCurrentSongIfNeeded();
+            Log.d("ServiceReceiver", "receive broadcast: " + intent.getAction());
+            if (intent.getAction().equals(AppConstants.broadcastSongChange)) {
+                Log.d("ServiceReceiver", "onReceive: broadcastSongChange");
+                if (nowPlayingFragment != null && !nowPlayingFragment.isHidden())
+                    nowPlayingFragment.refreshSong();
+                if (mainMenu != null && !mainMenu.isHidden())
+                    mainMenu.refreshCurrentSongIfNeeded();
+            } else if (intent.getAction().equals(AppConstants.broadcastBackgroundColorChange)) {
+                Log.d("ServiceReceiver", "onReceive: Change Background");
+                Log.d("ServiceReceiver", "onReceive: avgStepsPerMin is : " + StepRepo.getAvgStepsPerMin());
+                String color = ColorUtil.getColorFromMinuteSteps(StepRepo.getAvgStepsPerMin());
+                Log.d(TAG, "onReceive: color is " + color);
+                mainLayout.setBackgroundColor(Color.parseColor(color));
+            }
         }
     }
 }

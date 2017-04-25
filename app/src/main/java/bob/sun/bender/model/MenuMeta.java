@@ -21,6 +21,7 @@ public class MenuMeta {
         GetSourceCode,
         ContactUs,
         Connect,
+        Debug,
     }
     public String itemName;
     public boolean highlight;

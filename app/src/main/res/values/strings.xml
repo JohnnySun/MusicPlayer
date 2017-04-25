@@ -15,6 +15,7 @@
     <string name="nobody">Nobody</string>
     <string name="about">About</string>
     <string name="connect">Connect Band</string>
+    <string name="debug">Debugger</string>
     <string name="shuffle">Shuffle</string>
     <string name="repeat">Repeat</string>
     <string name="get_source_code">Get Source Code</string>
@@ -41,4 +42,7 @@
     <string name="search_band">Search Band</string>
     <string name="start_scan">Start Scan</string>
     <string name="stop_scan">Stop Scan</string>
+
+    <string name="debug_tools">Debug Tools</string>
+    <string name="avg_steps">Set Avg Steps</string>
 </resources>

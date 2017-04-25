@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:text="@string/debug_tools"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/id_tittle"
+        />
+
+    <Switch
+        android:id="@+id/debug_switch"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:layout_toEndOf="@id/id_tittle" />
+
+    <TextView
+        android:layout_below="@id/id_tittle"
+        android:id="@+id/text_avg_step"
+        android:layout_marginStart="20dp"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="@string/avg_steps"/>
+
+    <NumberPicker
+        android:id="@+id/avg_steps_picker"
+        android:layout_width="20dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@id/id_tittle"
+        android:layout_alignParentEnd="true"
+        android:scaleX="1.5"
+        android:scaleY="1.5" />
+
+
+</RelativeLayout>
