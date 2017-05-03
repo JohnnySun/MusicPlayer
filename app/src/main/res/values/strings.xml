@@ -45,4 +45,5 @@
 
     <string name="debug_tools">Debug Tools</string>
     <string name="avg_steps">Set Avg Steps</string>
+    <string name="is_sleep">Is Sleep</string>
 </resources>

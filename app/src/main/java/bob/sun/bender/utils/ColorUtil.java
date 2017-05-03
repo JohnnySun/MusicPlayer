@@ -1,6 +1,17 @@
 package bob.sun.bender.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.support.v7.graphics.Palette;
+
 import java.text.DecimalFormat;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Johnny on 西暦17/04/11.
@@ -65,5 +76,39 @@ public class ColorUtil {
                 return COLOR_DEEP_ORANGE;
         }
         return COLOR_BLUE;
+    }
+
+    public static void getMainColor(final Bitmap bitmap, final GetColorCallback callback) {
+        Observable.just(bitmap)
+                .subscribeOn(Schedulers.io())
+                .map(new Function<Bitmap, Integer>() {
+                    @Override
+                    public Integer apply(@NonNull Bitmap bitmap) {
+                        try {
+                            //首先获取一个Palette.Builder（稍后用到）
+                            Palette.Builder b = new Palette.Builder(bitmap);
+                            //设置好我们需要获取到多少种颜色
+                            b.maximumColorCount(1);
+                            //异步的进行颜色分析
+                            Palette palette = b.generate();
+                            Palette.Swatch swatch = palette.getSwatches().get(0);
+                            bitmap.recycle();
+                            return swatch.getRgb();
+                        } catch (Exception e) {
+                            return Color.parseColor(COLOR_BLUE);
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(@NonNull Integer integer) {
+                        callback.onCallBack(integer);
+                    }
+                });
+    }
+
+    public interface GetColorCallback {
+        void onCallBack(int color);
     }
 }

@@ -45,4 +45,5 @@
     
     <string name="debug_tools">调试工具</string>
     <string name="avg_steps">设置平均步数</string>
+    <string name="is_sleep">是否睡眠</string>
 </resources>

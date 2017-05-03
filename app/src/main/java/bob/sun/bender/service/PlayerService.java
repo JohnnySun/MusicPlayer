@@ -24,10 +24,10 @@ import java.util.TimerTask;
 import bob.sun.bender.PlayerServiceAIDL;
 import bob.sun.bender.controller.OnBandFoundListener;
 import bob.sun.bender.fragments.BandConnectFragment;
+import bob.sun.bender.model.BandRepo;
 import bob.sun.bender.model.MIBandSearchInstance;
 import bob.sun.bender.model.MiBandDevice;
 import bob.sun.bender.model.SongBean;
-import bob.sun.bender.model.BandRepo;
 import bob.sun.bender.utils.AppConstants;
 import bob.sun.bender.utils.NotificationUtil;
 import io.fabric.sdk.android.Fabric;
@@ -116,6 +116,16 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
             @Override
             public void onData(MiBandDevice device) {
                 if (device.getBandMac().equals(getBondBand())) {
+                    Log.d(TAG, "onData: sleep is " + device.getResult().getSleep());
+
+                    boolean isSleep;
+                    if (device.getResult().getSteps() == 0) {
+                        isSleep = false;
+                    } else {
+                        isSleep = true;
+                    }
+
+                    //BandRepo.setSleep(device.getResult().getSleep());
                     Log.d(TAG, "BandFound current step is: " + device.getResult().getSteps());
                     if (BandRepo.getLastSystemTime() == 0) {
                         BandRepo.setLastSteps(device.getResult().getSteps());
@@ -133,6 +143,8 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
                         Log.d(TAG, "BandFound current avgStep is: " + BandRepo.getAvgStepsPerMin());
                         Intent msg = new Intent(AppConstants.broadcastBackgroundColorChange);
                         msg.setPackage(PlayerService.this.getApplicationContext().getPackageName());
+                        msg.putExtra("avgStep", avgStepPerMin);
+                        msg.putExtra("isSleep", isSleep);
                         sendBroadcast(msg);
                     }
                     MIBandSearchInstance.getInstance().stopScan();
@@ -158,6 +170,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
             return START_REDELIVER_INTENT;
         }
         SongBean song;
+        BandRepo.setSleep(intent.getBooleanExtra("isSleep", false));
         switch (intent.getIntExtra("CMD",-1)){
             case CMD_PLAY:
                 song = (SongBean) intent.getSerializableExtra("DATA");
@@ -238,7 +251,17 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (repeatMode == AppConstants.RepeatOne) {
+        Log.d(TAG, "onCompletion: debug mode " + BandRepo.isDebugger());
+        if (BandRepo.isSleep()) {
+            Log.d(TAG, "onCompletion: user sleep");
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+            } else {
+                mediaPlayer.stop();
+                //mediaPlayer.reset();
+            }
+
+        } else if (repeatMode == AppConstants.RepeatOne) {
             if (currentSong == null)
                 return;
             mediaPlayer.stop();
@@ -294,6 +317,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         }
         NotificationUtil.getStaticInstance(getApplicationContext()).changeSong(playlist.get(index));
     }
+    
     private void onPrevious(){
         if (playlist == null || index <= 0){
             return;

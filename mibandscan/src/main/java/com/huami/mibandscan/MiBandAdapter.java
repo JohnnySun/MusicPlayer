@@ -8,11 +8,6 @@ import android.bluetooth.le.ScanResult;
 import android.os.Build;
 import android.util.Log;
 
-import com.huami.mibandscan.AuthService;
-import com.huami.mibandscan.MiBandScanCallBack;
-import com.huami.mibandscan.MiBandScanConfig;
-import com.huami.mibandscan.MiBandScanResult;
-
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
@@ -55,12 +50,6 @@ class MiBandAdapter implements BluetoothAdapter.LeScanCallback {
     public void onLeScan(final BluetoothDevice device,
                          final int rssi,
                          final byte[] scanRecord) {
-        // 每3600次发现设备发送一次心跳包
-        /*if (onDataCount >= 3600) {
-            authService.auth();
-            onDataCount = 0;
-        }*/
-
         if (isHuamiDevice(scanRecord) && isOnService()) {
             if (checkAccessBands(device)) {
                 // noinspection ResourceType

@@ -57,9 +57,10 @@
         android:layout_marginTop="8dp"
         android:textSize="20sp"
         android:gravity="center"
-        android:text="Stub"/>
+        android:text="@string/is_sleep"/>
 
     <Switch
+        android:id="@+id/sleep_switch"
         android:layout_below="@+id/text_avg_step"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="8dp"

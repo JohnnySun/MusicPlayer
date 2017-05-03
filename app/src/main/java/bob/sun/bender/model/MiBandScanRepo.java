@@ -1,11 +1,9 @@
 package bob.sun.bender.model;
 
-import com.huami.mibandscan.MiBandScan;
 import com.huami.mibandscan.MiBandScanResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
 
 /**
  * Created by bmy001 on 西暦17/04/01.
@@ -40,7 +38,7 @@ public class MiBandScanRepo {
     public void removeDevice(String bandMac) {
         synchronized (LOCK) {
             for (MiBandDevice item : bandList) {
-                if (item.getBandMac() == bandMac) {
+                if (item.getBandMac().equals(bandMac)) {
                     bandList.remove(item);
                 }
             }

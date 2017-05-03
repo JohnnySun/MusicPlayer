@@ -134,7 +134,7 @@ public class SongBean implements Serializable, Parcelable {
         return this;
     }
 
-    public void populateBean(Cursor cursor){
+    void populateBean(Cursor cursor){
         setId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)));
         setAlbum(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)));
         setArtist(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));

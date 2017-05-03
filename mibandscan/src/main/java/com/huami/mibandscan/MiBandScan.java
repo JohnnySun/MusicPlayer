@@ -53,7 +53,6 @@ public class MiBandScan {
         if (mBluetoothAdapter == null) {
             miBandScanCallBack.onStatus(MiBandScanStatus.NOT_SUPPORT_BLE);
         }
-
         //authService.auth();
         //authService.checkOpenId();
         return true;

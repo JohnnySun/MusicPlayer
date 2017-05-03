@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 import bob.sun.bender.MainActivity;
 import bob.sun.bender.PlayerServiceAIDL;
@@ -23,6 +27,7 @@ import bob.sun.bender.model.SelectionDetail;
 import bob.sun.bender.model.SongBean;
 import bob.sun.bender.service.PlayerService;
 import bob.sun.bender.utils.AIDLDumper;
+import bob.sun.bender.utils.ColorUtil;
 import bob.sun.bender.utils.VolumeUtil;
 
 
@@ -31,6 +36,7 @@ import bob.sun.bender.utils.VolumeUtil;
  */
 public class NowPlayingFragment extends Fragment implements OnTickListener {
 
+    private static final String TAG = "NowPlayingFragment";
     enum ViewMode {
         Playing,
         Volume,
@@ -127,6 +133,21 @@ public class NowPlayingFragment extends Fragment implements OnTickListener {
                 .placeholder(R.drawable.album)
                 .config(Bitmap.Config.RGB_565)
                 .into((ImageView) view.findViewById(R.id.id_nowplaying_image_view_cover));
+
+        try {
+            final MainActivity activity = (MainActivity) getActivity();
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(img));
+            ColorUtil colorUtil = new ColorUtil();
+            colorUtil.getMainColor(bitmap, new ColorUtil.GetColorCallback() {
+                @Override
+                public void onCallBack(int color) {
+
+                    activity.AnimateWindowColor(activity.getWindow().getStatusBarColor(), color);
+                }
+            });
+        } catch (IOException e) {
+            Log.d(TAG, "setSong: Get Song cover bitmap error: " + e.getMessage());
+        }
 
         viewMode = ViewMode.Playing;
 

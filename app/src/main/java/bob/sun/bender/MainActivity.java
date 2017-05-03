@@ -306,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
             playerService = null;
         }
     };
+
     private void startService(){
         serviceIntent = new Intent(this,PlayerService.class);
         this.bindService(serviceIntent, serviceConnection, BIND_AUTO_CREATE);
@@ -526,6 +527,7 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
             return;
         Intent intent = new Intent(this,PlayerService.class);
         intent.putExtra("CMD",PlayerService.CMD_NEXT);
+        putBandExtra(intent);
         startService(intent);
         VibrateUtil.getStaticInstance(null).TickVibrate();
     }
@@ -537,8 +539,14 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
             return;
         Intent intent = new Intent(this,PlayerService.class);
         intent.putExtra("CMD",PlayerService.CMD_PREVIOUS);
+        putBandExtra(intent);
         startService(intent);
         VibrateUtil.getStaticInstance(null).TickVibrate();
+    }
+
+    private void putBandExtra(Intent intent) {
+        intent.putExtra("isSleep", BandRepo.isSleep());
+        intent.putExtra("avgStepsPerMin", BandRepo.getAvgStepsPerMin());
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -791,6 +799,7 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
         boolean isDebugger = sharedPref.getBoolean("debug", false);
         BandRepo.setDebugger(isDebugger);
         BandRepo.setDevAvgStepsPerMin(sharedPref.getInt("avgStep", 80));
+        BandRepo.setDevSleep(sharedPref.getBoolean("sleep", false));
 
     }
 
@@ -831,7 +840,11 @@ public class MainActivity extends AppCompatActivity implements OnButtonListener 
                     mainMenu.refreshCurrentSongIfNeeded();
             } else if (intent.getAction().equals(AppConstants.broadcastBackgroundColorChange)) {
                 Log.d("ServiceReceiver", "onReceive: Change Background");
-                Log.d("ServiceReceiver", "onReceive: avgStepsPerMin is : " + BandRepo.getAvgStepsPerMin());
+                double avgStepPerMin = intent.getDoubleExtra("avgStep", 0);
+                boolean isSleep = intent.getBooleanExtra("isSleep", false);
+                BandRepo.setAvgStepsPerMin(avgStepPerMin);
+                BandRepo.setSleep(isSleep);
+                Log.d("ServiceReceiver", "onReceive: avgStepsPerMin is : " + avgStepPerMin);
                 AnimateWindowColor();
             }
         }

@@ -30,7 +30,7 @@ public class DebugFragment extends Fragment implements OnTickListener {
 
     public static final String TAG = "DebugFragment";
     private NumberPicker avgStepsPicker;
-    private Switch debugSwitch;
+    private Switch debugSwitch, sleepSwitch;
 
     private void saveSetpData(int value) {
         Log.i(TAG, "save dev setp data: " + value);
@@ -47,12 +47,12 @@ public class DebugFragment extends Fragment implements OnTickListener {
         return sharedPref.getInt("avgStep", 60);
     }
 
-    private void saveDebugState(boolean isDebug) {
-        Log.i(TAG, "save debug state: " + isDebug);
+    private void saveState(String name, boolean isDebug) {
+        Log.i(TAG, "save " + name + "state: " + isDebug);
         SharedPreferences sharedPref = getActivity()
                 .getSharedPreferences(preference_file_key, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("debug", isDebug);
+        editor.putBoolean(name, isDebug);
         editor.apply();
     }
 
@@ -61,13 +61,23 @@ public class DebugFragment extends Fragment implements OnTickListener {
         View ret = inflater.inflate(R.layout.layout_debug_tools, parent, false);
         avgStepsPicker = (NumberPicker) ret.findViewById(R.id.avg_steps_picker);
         debugSwitch = (Switch) ret.findViewById(R.id.debug_switch);
+        sleepSwitch = (Switch) ret.findViewById(R.id.sleep_switch);
 
         debugSwitch.setChecked(BandRepo.isDebugger());
         debugSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 BandRepo.setDebugger(isChecked);
-                saveDebugState(isChecked);
+                saveState("debug", isChecked);
+            }
+        });
+
+        sleepSwitch.setChecked(BandRepo.isSleep());
+        sleepSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                BandRepo.setDevSleep(isChecked);
+                saveState("sleep", isChecked);
             }
         });
 

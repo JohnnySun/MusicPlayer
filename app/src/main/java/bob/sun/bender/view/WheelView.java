@@ -130,7 +130,9 @@ public class WheelView extends View {
             } else {
                 //postDelayed(runnable, (long) frameRate);
                 float progress = (System.currentTimeMillis() - timer) / (float) duration;
-                canvas.drawCircle(ripplePoint.x, ripplePoint.y, fosInterpolator.getInterpolation(progress) * maxRadius + buttonWidth, ripplePaint);
+                canvas.drawCircle(ripplePoint.x, ripplePoint.y,
+                        fosInterpolator.getInterpolation(progress) * maxRadius + buttonWidth,
+                        ripplePaint);
                 canvas.drawCircle(center.x,center.y,radiusIn,paintIn);
 
                 if (Build.VERSION.SDK_INT != 23)
